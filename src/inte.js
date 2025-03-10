@@ -95,7 +95,6 @@ seleccion1.addEventListener('click', (event) => {
 
     event.target.classList.remove("btn-danger");
     event.target.classList.add("btn-warning");
-    console.log(pj1);
 })
 
 let seleccion2 = document.getElementById("player2_seleccion");
@@ -104,16 +103,14 @@ seleccion2.addEventListener('click', (event) => {
 
     seleccion2.querySelectorAll("img").forEach((temp_img) => {
         temp_img.classList.remove("btn-warning")
-        temp_img.classList.add("btn-danger")
+        temp_img.classList.add("btn-primary")
     });
 
-    event.target.classList.remove("btn-danger");
+    event.target.classList.remove("btn-primary");
     event.target.classList.add("btn-warning");
-    console.log(pj2);
 })
 
 btn_player1.addEventListener('click', () => {
-
     let user_name1 = document.getElementById("user_name1").value;
     if (user_name1 == "") {
         Swal.fire({
@@ -161,60 +158,132 @@ btn_player2.addEventListener('click', () => {
     }
 })
 
-document.getElementById("btn_atk_py1").addEventListener('click',() => {
-    player1.atk_basico(player2);
-    let porcentaje = parseInt((parseInt(player1.getKi())*100)/80);
-    document.getElementById("ki_py1").style.width=`${porcentaje}%`;
-    document.getElementById("ki_py1").innerText=`${porcentaje}%`;
+const turno = (turno,atacante) => {
+    document.getElementById(`btn_atk_py${turno}`).disabled = false
+    document.getElementById(`btn_esp_py${turno}`).disabled = false
+    document.getElementById(`btn_ermi_py${turno}`).disabled = false
+    document.getElementById(`btn_ki_py${turno}`).disabled = false
 
-    porcentaje = parseInt((parseInt(player1.getEnergia())*100/90));
-    document.getElementById("energia_py1").style.width=`${porcentaje}%`;
-    document.getElementById("energia_py1").innerText=`${porcentaje}%`;
+    document.getElementById(`btn_atk_py${atacante}`).disabled = true
+    document.getElementById(`btn_esp_py${atacante}`).disabled = true
+    document.getElementById(`btn_ermi_py${atacante}`).disabled = true
+    document.getElementById(`btn_ki_py${atacante}`).disabled = true
+}
 
-    porcentaje = parseInt((parseInt(player2.getVida())*100)/100);
-    document.getElementById("vida_py2").style.width=`${porcentaje}%`;
-    document.getElementById("vida_py2").innerText=`${porcentaje}%`;
-
+const derrotado = (derrotado,ganador) => {
     Swal.fire({
-        title: "Ataque Basico Jugador",
-        text: "AHHHHHH",
+        title: `Ganador`,
+        text: "Despues de un largo combate fuiste victorioso",
         width: 600,
         color: "#716add",
         background: "#f5f5f5",
-        imageUrl: `./public/img/${pj1}/basico.png`,
+        imageUrl: `./public/img/${ganador}/base.png`,
         imageWidth: 300,
         imageHeight: 300,
         imageAlt: "Ataque Basico",
         backdrop: "rgb(135, 204, 239,0.4)",
-      });
+    });
+    document.getElementById(`ki_py${derrotado}`).style.width=`${0}%`;
+    document.getElementById(`ki_py${derrotado}`).innerText=`${0}%`;
+
+    document.getElementById(`energia_py${derrotado}`).style.width=`${0}%`;
+    document.getElementById(`energia_py${derrotado}`).innerText=`${0}%`;
+
+    document.getElementById(`vida_py${derrotado}`).style.width=`${0}%`;
+    document.getElementById(`vida_py${derrotado}`).innerText=`${0}%`;
+
+    document.getElementById(`btn_atk_py1`).disabled = true
+    document.getElementById(`btn_esp_py1`).disabled = true
+    document.getElementById(`btn_ermi_py1`).disabled = true
+    document.getElementById(`btn_ki_py1`).disabled = true
+
+    document.getElementById(`btn_atk_py2`).disabled = true
+    document.getElementById(`btn_esp_py2`).disabled = true
+    document.getElementById(`btn_ermi_py2`).disabled = true
+    document.getElementById(`btn_ki_py2`).disabled = true
+}
+
+// Botones de jugador 1
+document.getElementById("btn_atk_py1").addEventListener('click',() => {    
+    if (player1.getKi() < 5 || player1.getEnergia() < 10) {
+        Swal.fire({
+            title: "Ki y Energia insuficiente",
+            text: "Tienes que recargar para hacer un ataque",
+            icon: "warning"
+        });
+    } else {
+        player1.atk_basico(player2);
+        if (player2.getVida() <= 0) {
+            derrotado(2,pj1)
+        }else {
+            let porcentaje = parseInt((parseInt(player1.getKi())*100)/80);
+            document.getElementById("ki_py1").style.width=`${porcentaje}%`;
+            document.getElementById("ki_py1").innerText=`${porcentaje}%`;
+        
+            porcentaje = parseInt((parseInt(player1.getEnergia())*100/90));
+            document.getElementById("energia_py1").style.width=`${porcentaje}%`;
+            document.getElementById("energia_py1").innerText=`${porcentaje}%`;
+        
+            porcentaje = parseInt((parseInt(player2.getVida())*100)/100);
+            document.getElementById("vida_py2").style.width=`${porcentaje}%`;
+            document.getElementById("vida_py2").innerText=`${porcentaje}%`;
+        
+            Swal.fire({
+                title: "Ataque Basico Jugador",
+                text: "AHHHHHH",
+                width: 600,
+                color: "#716add",
+                background: "#f5f5f5",
+                imageUrl: `./public/img/${pj1}/basico.png`,
+                imageWidth: 300,
+                imageHeight: 300,
+                imageAlt: "Ataque Basico",
+                backdrop: "rgb(135, 204, 239,0.4)",
+            });
+            turno(2,1);
+        }
+    }
 })
 
-document.getElementById("btn_esp_py1").addEventListener('click',() => {
-    player1.atk_especial(player2);
-    let porcentaje = parseInt((parseInt(player1.getKi())*100)/80);
-    document.getElementById("ki_py1").style.width=`${porcentaje}%`;
-    document.getElementById("ki_py1").innerText=`${porcentaje}%`;
-
-    porcentaje = parseInt((parseInt(player1.getEnergia())*100/90));
-    document.getElementById("energia_py1").style.width=`${porcentaje}%`;
-    document.getElementById("energia_py1").innerText=`${porcentaje}%`;
-
-    porcentaje = parseInt((parseInt(player2.getVida())*100)/100);
-    document.getElementById("vida_py2").style.width=`${porcentaje}%`;
-    document.getElementById("vida_py2").innerText=`${porcentaje}%`;
-
-    Swal.fire({
-        title: "Ataque Especial!",
-        text: "KAHHHHHH",
-        width: 600,
-        color: "#716add",
-        background: "#f5f5f5",
-        imageUrl: `./public/img/${pj1}/especial.png`,
-        imageWidth: 300,
-        imageHeight: 300,
-        imageAlt: "Ataque Especial",
-        backdrop: "rgb(135, 204, 239,0.4)",
-      });
+document.getElementById("btn_esp_py1").addEventListener('click',() => {    
+    if (player1.getKi() < 10 || player1.getEnergia() < 20) {
+        Swal.fire({
+            title: "Ki y Energia insuficiente",
+            text: "Tienes que recargar para hacer un ataque",
+            icon: "warning"
+        });
+    } else {
+        player1.atk_especial(player2);
+        if (player2.getVida() <= 0) {
+            derrotado(2,pj1)
+        }else {
+            let porcentaje = parseInt((parseInt(player1.getKi())*100)/80);
+            document.getElementById("ki_py1").style.width=`${porcentaje}%`;
+            document.getElementById("ki_py1").innerText=`${porcentaje}%`;
+        
+            porcentaje = parseInt((parseInt(player1.getEnergia())*100/90));
+            document.getElementById("energia_py1").style.width=`${porcentaje}%`;
+            document.getElementById("energia_py1").innerText=`${porcentaje}%`;
+        
+            porcentaje = parseInt((parseInt(player2.getVida())*100)/100);
+            document.getElementById("vida_py2").style.width=`${porcentaje}%`;
+            document.getElementById("vida_py2").innerText=`${porcentaje}%`;
+        
+            Swal.fire({
+                title: "Ataque Especial!",
+                text: "KAHHHHHH",
+                width: 600,
+                color: "#716add",
+                background: "#f5f5f5",
+                imageUrl: `./public/img/${pj1}/especial.png`,
+                imageWidth: 300,
+                imageHeight: 300,
+                imageAlt: "Ataque Especial",
+                backdrop: "rgb(135, 204, 239,0.4)",
+            });
+            turno(2,1);
+        }
+    }
 })
 
 document.getElementById("btn_ermi_py1").addEventListener('click',() => {
@@ -244,7 +313,8 @@ document.getElementById("btn_ermi_py1").addEventListener('click',() => {
         imageHeight: 300,
         imageAlt: "semilla",
         backdrop: "rgb(135, 204, 239,0.4)",
-      });
+    });
+    turno(2,1);
 })
 
 document.getElementById("btn_ki_py1").addEventListener('click',() => {
@@ -264,5 +334,141 @@ document.getElementById("btn_ki_py1").addEventListener('click',() => {
         imageHeight: 300,
         imageAlt: "cargar ki",
         backdrop: "rgb(135, 204, 239,0.4)",
-      });
+    });
+    turno(2,1);
+})
+
+// Botones de jugador 2
+document.getElementById("btn_atk_py2").addEventListener('click',() => {    
+    if (player2.getKi() < 5 || player2.getEnergia() < 10) {
+        Swal.fire({
+            title: "Ki y Energia insuficiente",
+            text: "Tienes que recargar para hacer un ataque",
+            icon: "warning"
+        });
+    } else {
+        player2.atk_basico(player1);
+        if (player1.getVida() <= 0) {
+            derrotado(1,pj2)
+        }else { 
+            let porcentaje = parseInt((parseInt(player2.getKi())*100)/80);
+            document.getElementById("ki_py2").style.width=`${porcentaje}%`;
+            document.getElementById("ki_py2").innerText=`${porcentaje}%`;
+        
+            porcentaje = parseInt((parseInt(player2.getEnergia())*100/90));
+            document.getElementById("energia_py2").style.width=`${porcentaje}%`;
+            document.getElementById("energia_py2").innerText=`${porcentaje}%`;
+        
+            porcentaje = parseInt((parseInt(player1.getVida())*100)/100);
+            document.getElementById("vida_py1").style.width=`${porcentaje}%`;
+            document.getElementById("vida_py1").innerText=`${porcentaje}%`;
+        
+            Swal.fire({
+                title: "Ataque Basico Jugador",
+                text: "AHHHHHH",
+                width: 600,
+                color: "#716add",
+                background: "#f5f5f5",
+                imageUrl: `./public/img/${pj2}/basico.png`,
+                imageWidth: 300,
+                imageHeight: 300,
+                imageAlt: "Ataque Basico",
+                backdrop: "rgb(135, 204, 239,0.4)",
+            });
+            turno(1,2);
+        }
+    }
+})
+
+document.getElementById("btn_esp_py2").addEventListener('click',() => {    
+    if (player2.getKi() < 10 || player2.getEnergia() < 20) {
+        Swal.fire({
+            title: "Ki y Energia insuficiente",
+            text: "Tienes que recargar para hacer un ataque",
+            icon: "warning"
+        });
+    } else {
+        player2.atk_especial(player1);
+        if (player1.getVida() <= 0) {
+            derrotado(1,pj2)
+        }else {
+            let porcentaje = parseInt((parseInt(player1.getKi())*100)/80);
+            document.getElementById("ki_py2").style.width=`${porcentaje}%`;
+            document.getElementById("ki_py2").innerText=`${porcentaje}%`;
+        
+            porcentaje = parseInt((parseInt(player1.getEnergia())*100/90));
+            document.getElementById("energia_py2").style.width=`${porcentaje}%`;
+            document.getElementById("energia_py2").innerText=`${porcentaje}%`;
+        
+            porcentaje = parseInt((parseInt(player1.getVida())*100)/100);
+            document.getElementById("vida_py1").style.width=`${porcentaje}%`;
+            document.getElementById("vida_py1").innerText=`${porcentaje}%`;
+        
+            Swal.fire({
+                title: "Ataque Especial!",
+                text: "KAHHHHHH",
+                width: 600,
+                color: "#716add",
+                background: "#f5f5f5",
+                imageUrl: `./public/img/${pj2}/especial.png`,
+                imageWidth: 300,
+                imageHeight: 300,
+                imageAlt: "Ataque Especial",
+                backdrop: "rgb(135, 204, 239,0.4)",
+            });
+            turno(1,2);
+        }
+    }
+})
+
+document.getElementById("btn_ermi_py2").addEventListener('click',() => {
+    player2.semilla_ermi();
+    let porcentaje = parseInt((parseInt(player2.getKi())*100)/80);
+    document.getElementById("ki_py2").style.width=`${porcentaje}%`;
+    document.getElementById("ki_py2").innerText=`${porcentaje}%`;
+
+    porcentaje = parseInt((parseInt(player2.getEnergia())*100/90));
+    document.getElementById("energia_py2").style.width=`${porcentaje}%`;
+    document.getElementById("energia_py2").innerText=`${porcentaje}%`;
+
+    porcentaje = parseInt((parseInt(player2.getVida())*100)/100);
+    document.getElementById("vida_py2").style.width=`${porcentaje}%`;
+    document.getElementById("vida_py2").innerText=`${porcentaje}%`;
+
+    document.getElementById('se_p2').innerText = player2.getSemilla()
+   
+    Swal.fire({
+        title: "Te has comido una semilla del ermitaño",
+        text: "Aumento de energia,ki y vida!!",
+        width: 600,
+        color: "#716add",
+        background: "#f5f5f5",
+        imageUrl: `./public/img/${pj2}/curar.png`,
+        imageWidth: 300,
+        imageHeight: 300,
+        imageAlt: "semilla",
+        backdrop: "rgb(135, 204, 239,0.4)",
+    });
+    turno(1,2);
+})
+
+document.getElementById("btn_ki_py2").addEventListener('click',() => {
+    player2.cargar_ki();
+    let porcentaje = parseInt((parseInt(player2.getKi())*100)/80);
+    document.getElementById("ki_py2").style.width=`${porcentaje}%`;
+    document.getElementById("ki_py2").innerText=`${porcentaje}%`;
+
+    Swal.fire({
+        title: "Aumentando ki!!!",
+        text: "Aumentaste tu ki",
+        width: 600,
+        color: "#716add",
+        background: "#f5f5f5",
+        imageUrl: `./public/img/${pj2}/energia.png`,
+        imageWidth: 300,
+        imageHeight: 300,
+        imageAlt: "cargar ki",
+        backdrop: "rgb(135, 204, 239,0.4)",
+    });
+    turno(1,2);
 })

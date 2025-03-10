@@ -17,7 +17,8 @@ class Game {
     }
     getSemilla(){
         return this.#semilla;
-    }getEnergia(){
+    }
+    getEnergia(){
         return this.#energia;
     }
     getUser_name(){
