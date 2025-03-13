@@ -245,7 +245,6 @@ const turno = (turno,atacante,turnos=0) => {
 }
 
 const volverAPelear = (ganador) => {
-    
     if (ganador == 1) {
         victoriasP1++;
         document.getElementById('victoriasP1').textContent = victoriasP1;
