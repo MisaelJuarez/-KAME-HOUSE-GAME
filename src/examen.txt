@@ -1,0 +1,7 @@
+- Ataque espefical, solo se puede utilizar uno cada dos turnos ----
+
+- Cantidad de ki 10 y energia 15 ---------
+
+- finalizar el combate, volver a intentar o volver a seleccionar personaje --------
+
+- contador de victorias ------
