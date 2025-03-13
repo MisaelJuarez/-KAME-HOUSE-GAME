@@ -49,7 +49,7 @@ class Game {
     }
     atk_especial(jugador){
         this.#ki -= this.#ki < 10 ? 0 : 10;
-        this.#energia -= this.#energia < 20 ? 0 : 20;
+        this.#energia -= this.#energia < 15 ? 0 : 15;
         jugador.setVida(30)
     }
     semilla_ermi(){

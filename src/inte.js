@@ -3,7 +3,7 @@ import Game from './Game.js';
 
 let btn_player1 = document.getElementById("btn_player1");
 let btn_player2 = document.getElementById("btn_player2");
-let player1, player2, pj1 = "", pj2 = "", aceptar = 0, turnosP1 = 0, turnosP2 = 0, victoriasP1 = 0, victoriasP2 = 0;
+let player1, player2, pj1 = "", pj2 = "", aceptar = 0, turnosP1 = 0, turnosP2 = 0, victoriasP1 = 0, victoriasP2 = 0, audio = 0;
 
 const ataques = {
     "Vegito": {
@@ -331,6 +331,21 @@ const derrotado = (derrotado,img,ganadorNombre,ganador) => {
     document.getElementById(`vida_py${derrotado}`).style.width=`${0}%`;
     document.getElementById(`vida_py${derrotado}`).innerText=`${0}%`;
 }
+
+let etiquetaAudio = document.createElement("audio");
+etiquetaAudio.setAttribute("src", "./public/audio/DBZ.mp4");
+etiquetaAudio.loop = true;
+
+document.getElementById('sonido').addEventListener("click", () => {
+    audio++;
+    if (audio >= 2) {
+        etiquetaAudio.pause();
+        etiquetaAudio.currentTime = 0;
+        audio = 0;
+    }else{
+        etiquetaAudio.play();
+    }
+})
 
 // Botones de jugador 1
 document.getElementById("btn_atk_py1").addEventListener('click', async () => {    
